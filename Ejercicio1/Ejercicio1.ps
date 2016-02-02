@@ -1,0 +1,35 @@
+<# 
+	El primer parametro no es obligatorio (por lo visto es pathsalida)	
+	Cantidad es 3 y esta harcodeado
+#>
+Param
+(
+[Parameter(Position = 1, Mandatory = $false)][String] $pathsalida = ".",
+[int] $cantidad = 3
+)
+<#Comprueba que existe el path de salida#>
+$existe = Test-Path $pathsalida
+if ($existe -eq $true)
+{
+<#
+listaproceso contiene la listas de procesos actuales
+hace un foreach para recorrer la lista de procesos
+Selecciona los atributos Id,Name del objeto proceso y lo envia mediante el flujo de salida al archivo procesos.txt
+#>
+$listaproceso = Get-Process
+foreach ($proceso in $listaproceso)
+{
+$proceso | Format-List -Property Id,Name >> procesos.txt
+}
+<#
+	Imprime por pantalla el nombre y el Id de los primeros tres elementos que se tiene
+#>
+for ($i = 0; $i -lt $cantidad ; $i++)
+{
+Write-Host $listaproceso[$i].Name - $listaproceso[$i].Id
+}
+}
+else
+{
+Write-Host "El path no existe"
+}
